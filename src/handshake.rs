@@ -6,11 +6,11 @@ use sha1::Sha1;
 use finchers::error::HttpError;
 
 #[derive(Debug)]
-pub struct Accept {
-    pub hash: String,
+pub(crate) struct Accept {
+    pub(crate) hash: String,
 }
 
-pub fn accept_handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeError> {
+pub(crate) fn accept_handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeError> {
     let h = request
         .headers()
         .get(header::CONNECTION)
@@ -57,6 +57,7 @@ pub fn accept_handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeErro
     Ok(Accept { hash })
 }
 
+/// The error type during handling WebSocket handshake.
 #[derive(Debug, Fail)]
 #[fail(display = "handshake error: {}", kind)]
 pub struct HandshakeError {
@@ -75,6 +76,14 @@ impl HttpError for HandshakeError {
     }
 }
 
+impl HandshakeError {
+    #[allow(missing_docs)]
+    pub fn kind(&self) -> &HandshakeErrorKind {
+        &self.kind
+    }
+}
+
+#[allow(missing_docs)]
 #[derive(Debug, Fail)]
 pub enum HandshakeErrorKind {
     #[fail(display = "missing header: `{}'", name)]
