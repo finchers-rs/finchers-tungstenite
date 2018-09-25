@@ -32,12 +32,13 @@ mod handshake;
 use finchers::endpoint::{Context, Endpoint, EndpointResult};
 use finchers::output::{Output, OutputContext};
 
-use futures::{Future, Poll};
+use tungstenite::protocol::{Role, WebSocketConfig};
+
+use futures::{Async, Future, Poll};
 use http::header;
 use http::{Response, StatusCode};
 use hyper::upgrade::Upgraded;
 use tokio_tungstenite::WebSocketStream;
-use tungstenite::protocol::Role;
 
 use handshake::{accept_handshake, Accept};
 
@@ -66,16 +67,27 @@ impl Future for WsFuture {
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
         let accept = finchers::input::with_get_cx(|input| accept_handshake(input.request()))?;
-        Ok((Ws { accept },).into())
+        Ok(Async::Ready((Ws {
+            accept,
+            config: None,
+        },)))
     }
 }
 
 #[derive(Debug)]
 pub struct Ws {
     accept: Accept,
+    config: Option<WebSocketConfig>,
 }
 
 impl Ws {
+    pub fn with_config(self, config: WebSocketConfig) -> Ws {
+        Ws {
+            config: Some(config),
+            ..self
+        }
+    }
+
     pub fn on_upgrade<F, R>(self, upgrade: F) -> WsOutput<F>
     where
         F: FnOnce(WebSocketStream<Upgraded>) -> R + Send + 'static,
@@ -83,6 +95,7 @@ impl Ws {
     {
         WsOutput {
             accept: self.accept,
+            config: self.config,
             upgrade,
         }
     }
@@ -91,8 +104,11 @@ impl Ws {
 #[derive(Debug)]
 pub struct WsOutput<F> {
     accept: Accept,
+    config: Option<WebSocketConfig>,
     upgrade: F,
 }
+
+impl<F> WsOutput<F> {}
 
 impl<F, R> Output for WsOutput<F>
 where
@@ -105,6 +121,7 @@ where
     fn respond(self, cx: &mut OutputContext<'_>) -> Result<Response<Self::Body>, Self::Error> {
         let WsOutput {
             accept: Accept { hash },
+            config: ws_config,
             upgrade,
         } = self;
 
@@ -118,7 +135,8 @@ where
                 .on_upgrade()
                 .map_err(|_| eprintln!("upgrade error"))
                 .and_then(move |upgraded| {
-                    let ws_stream = WebSocketStream::from_raw_socket(upgraded, Role::Server, None);
+                    let ws_stream =
+                        WebSocketStream::from_raw_socket(upgraded, Role::Server, ws_config);
                     upgrade(ws_stream)
                 }),
         );
