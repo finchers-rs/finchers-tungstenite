@@ -45,6 +45,9 @@ use handshake::{accept_handshake, Accept};
 
 pub use handshake::{HandshakeError, HandshakeErrorKind};
 
+#[allow(missing_docs)]
+pub type WsTransport = WebSocketStream<Upgraded>;
+
 /// Create an endpoint which handles the WebSocket handshake request.
 pub fn ws() -> WsEndpoint {
     (WsEndpoint { _priv: () }).with_output::<(Ws,)>()
@@ -119,7 +122,7 @@ impl<Exec: Executor> Ws<Exec> {
     /// WebSocket.
     pub fn on_upgrade<F, R>(self, upgrade: F) -> WsOutput<F, Exec>
     where
-        F: FnOnce(WebSocketStream<Upgraded>) -> R + Send + 'static,
+        F: FnOnce(WsTransport) -> R + Send + 'static,
         R: Future<Item = (), Error = ()> + Send + 'static,
     {
         WsOutput {
@@ -142,7 +145,7 @@ pub struct WsOutput<F, Exec> {
 
 impl<F, Exec, R> Output for WsOutput<F, Exec>
 where
-    F: FnOnce(WebSocketStream<Upgraded>) -> R + Send + 'static,
+    F: FnOnce(WsTransport) -> R + Send + 'static,
     R: Future<Item = (), Error = ()> + Send + 'static,
     Exec: Executor,
 {
