@@ -6,15 +6,12 @@ extern crate http;
 extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
-extern crate tungstenite;
 
 use finchers::prelude::*;
-use finchers_tungstenite::{ws, Ws, WsTransport};
 use futures::prelude::*;
 use http::Response;
 
-use tungstenite::error::Error as WsError;
-use tungstenite::Message;
+use finchers_tungstenite::{Message, Ws, WsError, WsTransport};
 
 fn on_upgrade(stream: WsTransport) -> impl Future<Item = (), Error = ()> {
     let (tx, rx) = stream.split();
@@ -53,10 +50,12 @@ fn main() {
             ).unwrap()
     });
 
-    let ws_endpoint = path!(/ "ws" /).and(ws()).map(|ws: Ws| {
-        info!("accepted a WebSocket request");
-        ws.on_upgrade(on_upgrade)
-    });
+    let ws_endpoint = path!(/ "ws" /)
+        .and(finchers_tungstenite::ws())
+        .map(|ws: Ws| {
+            info!("accepted a WebSocket request");
+            ws.on_upgrade(on_upgrade)
+        });
 
     let endpoint = index.or(ws_endpoint);
 

@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 use base64;
 use http::header;
 use http::{Request, StatusCode};
@@ -6,11 +8,12 @@ use sha1::Sha1;
 use finchers::error::HttpError;
 
 #[derive(Debug)]
-pub(crate) struct Accept {
-    pub(crate) hash: String,
+pub struct Accept {
+    pub hash: String,
+    _priv: (),
 }
 
-pub(crate) fn accept_handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeError> {
+pub fn handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeError> {
     let h = request
         .headers()
         .get(header::CONNECTION)
@@ -54,7 +57,7 @@ pub(crate) fn accept_handshake<T>(request: &Request<T>) -> Result<Accept, Handsh
 
     let hash = base64::encode(&m.digest().bytes()[..]);
 
-    Ok(Accept { hash })
+    Ok(Accept { hash, _priv: () })
 }
 
 /// The error type during handling WebSocket handshake.
