@@ -1,3 +1,6 @@
+// FIXME: remove it as soon as the rustc version used in docs.rs is updated
+#![cfg_attr(finchers_inject_extern_prelude, feature(extern_prelude))]
+
 //! WebSocket support for Finchers based on tungstenite.
 //!
 //! # Example
@@ -43,8 +46,8 @@
     unused,
 )]
 //#![warn(rust_2018_compatibility)]
-#![cfg_attr(feature = "strict", deny(warnings))]
-#![cfg_attr(feature = "strict", doc(test(attr(deny(warnings)))))]
+#![cfg_attr(test, deny(warnings))]
+#![cfg_attr(test, doc(test(attr(deny(warnings)))))]
 
 extern crate base64;
 #[macro_use]
