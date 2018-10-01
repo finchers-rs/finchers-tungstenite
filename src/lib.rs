@@ -7,14 +7,11 @@
 //! extern crate finchers;
 //! extern crate finchers_tungstenite;
 //! # extern crate futures;
-//! # use futures::prelude::*;
 //!
 //! use finchers::prelude::*;
 //! use finchers_tungstenite::{
-//!     Message,
-//!     Ws,
-//!     WsError,
-//!     WsTransport,
+//!   Ws,
+//!   WsTransport,
 //! };
 //!
 //! # fn main() {

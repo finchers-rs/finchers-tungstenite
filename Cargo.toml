@@ -2,7 +2,35 @@
 name = "finchers-tungstenite"
 version = "0.1.0-dev"
 authors = ["Yusuke Sasaki <yusuke.sasaki.nuem@gmail.com>"]
+description = """
+WebSocket support for Finchers, based on tungstenite.
+"""
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/finchers-rs/finchers-tungstenite.git"
 publish = false
+
+include = [
+  "Cargo.toml",
+  "build.rs",
+  "src/**/*",
+  "tests/**/*",
+  "examples/**/*",
+  "benches/**/*",
+  "LICENSE-MIT",
+  "LICENSE-APACHE",
+]
+
+[package.metadata.docs.rs]
+features = [
+  # FIXME: remove it as soon as the rustc version used in docs.rs is updated.
+  "extern-prelude",
+]
+
+[features]
+strict = []
+# FIXME: remove it as soon as the rustc version used in docs.rs is updated
+extern-prelude = []
 
 [dependencies]
 finchers = "0.12"
@@ -18,9 +46,9 @@ tokio-tungstenite = "0.6.0"
 tungstenite = "0.6.0"
 
 [dev-dependencies]
-pretty_env_logger = "0.2.4"
 log = "0.4.5"
 matches = "0.1.8"
+pretty_env_logger = "0.2.4"
 
 [patch.crates-io.finchers]
 git = "https://github.com/finchers-rs/finchers.git"
