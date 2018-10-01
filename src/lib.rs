@@ -29,7 +29,7 @@ extern crate tungstenite;
 
 mod handshake;
 
-use finchers::endpoint::{Context, Endpoint, EndpointResult};
+use finchers::endpoint::{ApplyContext, ApplyResult, Endpoint};
 use finchers::output::{Output, OutputContext};
 
 use tungstenite::protocol::{Role, WebSocketConfig};
@@ -63,7 +63,7 @@ impl<'a> Endpoint<'a> for WsEndpoint {
     type Output = (Ws,);
     type Future = WsFuture;
 
-    fn apply(&'a self, _: &mut Context<'_>) -> EndpointResult<Self::Future> {
+    fn apply(&'a self, _: &mut ApplyContext<'_>) -> ApplyResult<Self::Future> {
         Ok(WsFuture { _priv: () })
     }
 }
@@ -79,7 +79,7 @@ impl Future for WsFuture {
     type Error = finchers::error::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        let accept = finchers::input::with_get_cx(|input| accept_handshake(input.request()))?;
+        let accept = finchers::endpoint::with_get_cx(|cx| accept_handshake(cx.request()))?;
         Ok(Async::Ready((Ws {
             accept,
             config: None,
