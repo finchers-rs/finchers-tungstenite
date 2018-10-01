@@ -62,6 +62,7 @@ matrix:
         - rm -rf target/doc
         - cargo update
         - cargo doc --no-deps
+        - cargo doc --no-deps -p tungstenite
         - rm -f target/doc/.lock
         - echo '<meta http-equiv="refresh" content="0;URL=finchers_tungstenite/index.html">' > target/doc/index.html
       deploy:

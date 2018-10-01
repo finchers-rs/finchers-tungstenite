@@ -1,3 +1,5 @@
+//! The implementation of WebSocket handshake process.
+
 #![allow(missing_docs)]
 
 use base64;
@@ -13,6 +15,9 @@ pub struct Accept {
     _priv: (),
 }
 
+/// Check if the specified HTTP response is a valid WebSocket handshake request.
+///
+/// If successful, it returns a SHA1 hash used as `Sec-WebSocket-Accept` header in the response.
 pub fn handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeError> {
     let h = request
         .headers()
@@ -88,6 +93,7 @@ impl HandshakeError {
 
 #[allow(missing_docs)]
 #[derive(Debug, Fail)]
+#[cfg_attr(test, derive(PartialEq))]
 pub enum HandshakeErrorKind {
     #[fail(display = "missing header: `{}'", name)]
     MissingHeader { name: &'static str },

@@ -25,9 +25,8 @@
 //! #           futures::future::ok(())
 //!         })
 //!     });
-//!
-//! finchers::launch(endpoint)
-//!     .start("127.0.0.1:4000");
+//! #
+//! # finchers::launch(endpoint).start("127.0.0.1:4000");
 //! # });
 //! # }
 //! ```
@@ -108,7 +107,6 @@ mod imp {
         }
     }
 
-    #[doc(hidden)]
     #[derive(Debug)]
     pub struct WsFuture {
         _priv: (),
@@ -140,7 +138,7 @@ mod imp {
     }
 
     impl<Exec: Executor> Ws<Exec> {
-        #[allow(missing_docs)]
+        /// Sets the configuration for upgraded WebSocket connection.
         pub fn config(self, config: WebSocketConfig) -> Ws<Exec> {
             Ws {
                 config: Some(config),
@@ -148,7 +146,10 @@ mod imp {
             }
         }
 
-        #[allow(missing_docs)]
+        /// Sets the instance of `Executor` at spawning the task which handles the upgraded
+        /// WebSocket connection.
+        ///
+        /// By default, it is set to Tokio's `DefaultExecutor`.
         pub fn executor<T: Executor>(self, executor: T) -> Ws<T> {
             Ws {
                 accept: self.accept,
@@ -174,7 +175,10 @@ mod imp {
         }
     }
 
-    #[allow(missing_docs)]
+    /// The type representing an `Output` to be converted into an handshake response.
+    ///
+    /// The value will spawn a task which handles the upgraded WebSocket connection
+    /// by the specified task executor, at converting it into an HTTP response.
     #[derive(Debug)]
     pub struct WsOutput<F, Exec> {
         accept: Accept,
