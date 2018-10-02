@@ -18,6 +18,7 @@ matrix:
 
   include:
     - rust: stable
+      env: RUSTFLAGS="--cfg finchers_deny_warnings"
       sudo: required
       addons:
         apt:
@@ -38,19 +39,17 @@ matrix:
         - cargo fmt -- --check
         - if [[ "${TRAVIS_PULL_REQUEST_BRANCH:-}" = release-* ]]; then cargo publish --dry-run; fi
       after_success:
+        - unset RUSTFLAGS
         - cargo kcov --print-install-kcov-sh | sh
         - cargo kcov -v --coveralls
 
     - rust: beta
-      before_script:
-        - export CARGO_INCREMENTAL=0
+      env: RUSTFLAGS="--cfg finchers_deny_warnings"
       script:
         - cargo update
         - cargo test
 
     - rust: nightly
-      before_script:
-        - export CARGO_INCREMENTAL=0
       script:
         - cargo update
         - cargo test

@@ -34,10 +34,7 @@
 //! # }
 //! ```
 
-// master
-#![doc(html_root_url = "https://finchers-rs.github.io/finchers-tungstenite")]
-// released
-//#![doc(html_root_url = "https://docs.rs/finchers-tungstenite/0.1.0-alpha.1")]
+#![doc(html_root_url = "https://docs.rs/finchers-tungstenite/0.1.0")]
 #![warn(
     missing_docs,
     missing_debug_implementations,
