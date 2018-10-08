@@ -11,14 +11,21 @@ branches:
     - master
     - /^\d+\.\d+\.x$/
 
+script:
+  - cargo update
+  - cargo build
+
 matrix:
   allow_failures:
     - rust: nightly
   fast_finish: true
 
   include:
+    - rust: 1.29.1
+    - rust: beta
+    - rust: nightly
+
     - rust: stable
-      env: RUSTFLAGS="--cfg finchers_deny_warnings"
       sudo: required
       addons:
         apt:
@@ -28,31 +35,19 @@ matrix:
             - libdw-dev
             - binutils-dev
       before_script:
-        - rustup component add rustfmt-preview
+        - rustup component add rustfmt-preview clippy-preview
         - cargo install cargo-update || true
         - cargo install cargo-kcov || true
         - cargo install-update -a
-        - export CARGO_INCREMENTAL=0
       script:
         - cargo update
         - cargo test
         - cargo fmt -- --check
+        - cargo clippy
         - if [[ "${TRAVIS_PULL_REQUEST_BRANCH:-}" = release-* ]]; then cargo publish --dry-run; fi
       after_success:
-        - unset RUSTFLAGS
         - cargo kcov --print-install-kcov-sh | sh
         - cargo kcov -v --coveralls
-
-    - rust: beta
-      env: RUSTFLAGS="--cfg finchers_deny_warnings"
-      script:
-        - cargo update
-        - cargo test
-
-    - rust: nightly
-      script:
-        - cargo update
-        - cargo test
 
     - rust: stable
       env: DEPLOY_API_DOC
@@ -61,7 +56,8 @@ matrix:
         - rm -rf target/doc
         - cargo update
         - cargo doc --no-deps -p tungstenite
-        - cargo doc --no-deps --all-features
+        - cargo doc --no-deps -p tokio-tungstenite
+        - cargo doc --no-deps
         - rm -f target/doc/.lock
         - echo '<meta http-equiv="refresh" content="0;URL=finchers_tungstenite/index.html">' > target/doc/index.html
       deploy:

@@ -18,7 +18,6 @@
 //! };
 //!
 //! # fn main() {
-//! # drop(|| {
 //! let endpoint = path!(@get / "ws" /)
 //!     .and(finchers_tungstenite::ws())
 //!     .map(|ws: Ws| {
@@ -28,8 +27,10 @@
 //! #           futures::future::ok(())
 //!         })
 //!     });
-//! #
-//! # finchers::launch(endpoint).start("127.0.0.1:4000");
+//! # drop(|| {
+//! # finchers::server::start(endpoint)
+//! #     .serve("127.0.0.1:4000")
+//! #     .unwrap();
 //! # });
 //! # }
 //! ```
