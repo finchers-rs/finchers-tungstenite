@@ -1,24 +1,23 @@
 //! The implementation of WebSocket handshake process.
 
-#![allow(missing_docs)]
-
 use base64;
 use http::header;
-use http::{Request, StatusCode};
+use http::StatusCode;
 use sha1::Sha1;
 
 use finchers::error::HttpError;
+use finchers::input::Input;
 
 #[derive(Debug)]
-pub struct Accept {
-    pub hash: String,
+pub(crate) struct Accept {
+    pub(crate) hash: String,
     _priv: (),
 }
 
 /// Check if the specified HTTP response is a valid WebSocket handshake request.
 ///
 /// If successful, it returns a SHA1 hash used as `Sec-WebSocket-Accept` header in the response.
-pub fn handshake<T>(request: &Request<T>) -> Result<Accept, HandshakeError> {
+pub(crate) fn handshake(request: &Input) -> Result<Accept, HandshakeError> {
     let h = request
         .headers()
         .get(header::CONNECTION)

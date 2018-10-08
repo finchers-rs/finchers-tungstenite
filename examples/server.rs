@@ -31,6 +31,7 @@ fn on_upgrade(stream: WsTransport) -> impl Future<Item = (), Error = ()> {
 }
 
 fn main() {
+    std::env::set_var("RUST_LOG", "server=info");
     pretty_env_logger::init();
 
     let index = path!(/).map(|| {
@@ -59,6 +60,8 @@ fn main() {
 
     let endpoint = index.or(ws_endpoint);
 
-    info!("Listening on http://127.0.0.1:4000");
-    finchers::launch(endpoint).start("127.0.0.1:4000");
+    info!("Listening on http://127.0.0.1:5000");
+    finchers::server::start(endpoint)
+        .serve("127.0.0.1:5000")
+        .unwrap_or_else(|err| error!("{}", err))
 }
