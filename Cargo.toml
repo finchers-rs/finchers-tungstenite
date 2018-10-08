@@ -1,6 +1,6 @@
 [package]
 name = "finchers-tungstenite"
-version = "0.2.0"
+version = "0.2.1-dev"
 authors = ["Yusuke Sasaki <yusuke.sasaki.nuem@gmail.com>"]
 description = """
 WebSocket support for Finchers, based on tungstenite.
