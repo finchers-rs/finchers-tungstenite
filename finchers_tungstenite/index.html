@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `finchers_tungstenite` crate."><meta name="keywords" content="rust, rustlang, rust-lang, finchers_tungstenite"><title>finchers_tungstenite - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate finchers_tungstenite</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'finchers_tungstenite', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>finchers_tungstenite</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/finchers_tungstenite/lib.rs.html#2-173' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>WebSocket support for Finchers based on tungstenite.</p>
+<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">finchers</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">finchers_tungstenite</span>;
+
+<span class="kw">use</span> <span class="ident">finchers</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">finchers_tungstenite</span>::{
+  <span class="ident">Ws</span>,
+  <span class="ident">WsTransport</span>,
+};
+
+<span class="kw">let</span> <span class="ident">endpoint</span> <span class="op">=</span> <span class="macro">path</span><span class="macro">!</span>(@<span class="ident">get</span> <span class="op">/</span> <span class="string">&quot;ws&quot;</span> <span class="op">/</span>)
+    .<span class="ident">and</span>(<span class="ident">finchers_tungstenite</span>::<span class="ident">ws</span>())
+    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ws</span>: <span class="ident">Ws</span><span class="op">|</span> {
+        <span class="ident">ws</span>.<span class="ident">on_upgrade</span>(<span class="op">|</span><span class="ident">ws</span>: <span class="ident">WsTransport</span><span class="op">|</span> {
+            <span class="comment">// ...</span>
+        })
+    });</pre>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub extern crate <a class="mod" href="../tungstenite/index.html" title="mod tungstenite">tungstenite</a>;</code></td></tr><tr><td><code>pub use tungstenite::error::<a class="enum" href="../tungstenite/error/enum.Error.html" title="enum tungstenite::error::Error">Error</a> as WsError;</code></td></tr><tr><td><code>pub use tungstenite::protocol::<a class="enum" href="../tungstenite/protocol/message/enum.Message.html" title="enum tungstenite::protocol::message::Message">Message</a>;</code></td></tr><tr><td><code>pub use tungstenite::protocol::<a class="struct" href="../tungstenite/protocol/struct.WebSocketConfig.html" title="struct tungstenite::protocol::WebSocketConfig">WebSocketConfig</a>;</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.HandshakeError.html"
+                                  title='struct finchers_tungstenite::HandshakeError'>HandshakeError</a></td>
+                           <td class='docblock-short'>
+                                <p>The error type during handling WebSocket handshake.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Ws.html"
+                                  title='struct finchers_tungstenite::Ws'>Ws</a></td>
+                           <td class='docblock-short'>
+                                <p>A type representing the result of handshake handling.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.WsEndpoint.html"
+                                  title='struct finchers_tungstenite::WsEndpoint'>WsEndpoint</a></td>
+                           <td class='docblock-short'>
+                                <p>An instance of <code>Endpoint</code> which handles the WebSocket handshake request.</p>
+
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.HandshakeErrorKind.html"
+                                  title='enum finchers_tungstenite::HandshakeErrorKind'>HandshakeErrorKind</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.ws.html"
+                                  title='fn finchers_tungstenite::ws'>ws</a></td>
+                           <td class='docblock-short'>
+                                <p>Create an endpoint which handles the WebSocket handshake request.</p>
+
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.WsTransport.html"
+                                  title='type finchers_tungstenite::WsTransport'>WsTransport</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "finchers_tungstenite";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
